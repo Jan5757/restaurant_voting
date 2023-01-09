@@ -1,8 +1,6 @@
 package ru.javaops.restaurant_voting.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 @Entity
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "dish_unique_name_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,11 +17,11 @@ public class Dish extends NamedEntity {
 
     @NotNull
     @Range(min = 0, max = 999999999)
-    //table
+    @Column(name = "price", nullable = false)
     private Integer price;
 
     //    @JsonIgnore
-    //table
+    @JoinColumn(name = "rest_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 

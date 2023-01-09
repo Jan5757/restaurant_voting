@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
@@ -20,50 +22,55 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//todo Table
-public class User extends NamedEntity implements Serializable {
+@Table(name = "users")
+public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
     @Size(max = 128)
-    //todo table, nohtml
+    //todo  nohtml
     private String email;
 
+    @Column(name = "password", nullable = false)
     @NotBlank
     @Size(max = 256)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    //todo table
     private String password;
 
-    //todo table
+    @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
+    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    //todo table
     private Date registered = new Date();
 
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}, name = "uk_user_role"))
+    @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
-    //todo table
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
-    //todo table
+    @Column(name = "vote", nullable = false, columnDefinition = "bool default false")
     private boolean isVoted = false;
 
-    //todo table
-    //schema?
+    @Column(name = "rest_id")
     private Integer restaurantId;
 
 //    public User(User u) {
 //        this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.restaurantId, u.isVoted, u.roles);
 //    }
 //
-//    public User(Integer id, String name, String email, String password, Integer restaurantId, boolean isVoted, Role... roles) {
-//        this(id, name, email, password, true, new Date(), restaurantId, isVoted, Arrays.asList(roles));
-//    }
+    public User(Integer id, String name, String email, String password, Role... roles) {
+        this(id, name, email, password, true, new Date(), Arrays.asList(roles));
+    }
 
     public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Collection<Role> roles) {
         super(id, name);

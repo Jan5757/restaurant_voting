@@ -1,5 +1,6 @@
 package ru.javaops.restaurant_voting.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,9 +14,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class NamedEntity extends BaseEntity {
+    @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 2, max = 128)
-    //TODO column, nohtml
+    //TODO nohtml
     protected String name;
 
     protected NamedEntity(Integer id, String name) {
