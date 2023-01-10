@@ -7,6 +7,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.restaurant_voting.util.validation.ValidationUtil;
 
+import java.util.Optional;
+
 @NoRepositoryBean
 public interface BaseRepository<T> extends JpaRepository<T, Integer> {
 
@@ -20,7 +22,7 @@ public interface BaseRepository<T> extends JpaRepository<T, Integer> {
     }
 
     @Query("SELECT e FROM #{#entityName} e WHERE e.id = :id")
-    T get(int id);
+    Optional<T> get(int id);
 
     default T getExisted(int id) {
         return ValidationUtil.checkExisted(get(id), id);

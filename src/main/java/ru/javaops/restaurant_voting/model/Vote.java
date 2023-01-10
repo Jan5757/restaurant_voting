@@ -9,29 +9,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.validator.constraints.Range;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "rest_id"}, name = "dish_unique_name_rest_idx")})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "vote_unique_user_datetime_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Dish extends NamedEntity {
+public class Vote extends BaseEntity {
 
-    @NotNull
-    @Range(min = 0, max = 999999999)
-    @Column(name = "price", nullable = false)
-    private Integer price;
+    @JsonIgnore
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
+    @Column(name = "date_time", nullable = false)
     @NotNull
-    @Column(name = "currency_code_iso")
-    private String currencyCode;
-
-    @Column(name = "date", nullable = false)
-    @NotNull
-    private LocalDate date;
+    private LocalDateTime dateTime;
 
     @JsonIgnore
     @JoinColumn(name = "rest_id", nullable = false)
@@ -39,8 +35,4 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, Integer price) {
-        super(id, name);
-        this.price = price;
-    }
 }

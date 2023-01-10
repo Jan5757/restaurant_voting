@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 import ru.javaops.restaurant_voting.error.IllegalRequestDataException;
 import ru.javaops.restaurant_voting.model.HasId;
 
+import java.util.Optional;
+
 @UtilityClass
 public class ValidationUtil {
 
@@ -27,10 +29,10 @@ public class ValidationUtil {
         }
     }
 
-    public static <T> T checkExisted(T obj, int id) {
-        if (obj == null) {
+    public static <T> T checkExisted(Optional<T> obj, int id) {
+        if (obj.isEmpty()) {
             throw new IllegalRequestDataException("Entity with id=" + id + " not found");
         }
-        return obj;
+        return obj.get();
     }
 }
