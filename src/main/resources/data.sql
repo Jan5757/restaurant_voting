@@ -1,7 +1,8 @@
 INSERT INTO USERS (NAME, EMAIL, PASSWORD)
 VALUES ('User', 'user@yandex.ru', '{noop}password'),
        ('Admin', 'admin@gmail.com', '{noop}admin'),
-       ('Guest', 'guest@gmail.com', '{noop}guest');
+       ('Guest', 'guest@gmail.com', '{noop}guest'),
+       ('User2', 'user2@yandex.ru', '{noop}password');
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
@@ -27,9 +28,10 @@ VALUES ('2022-01-10', 'Bouillabaisse', 55000, 1, 'RUB'),
        ('2022-01-10', 'Dumplings', 25000, 3, 'RUB'),
        ('2022-01-10', 'Tea', 6000, 3, 'RUB');
 
-INSERT INTO VOTE (DATE_TIME, REST_ID, USER_ID)
-VALUES ('2022-01-10 10:00:00', 1, 1),
-       ('2022-01-10 09:00:00', 2, 1),
-       ('2022-01-11 08:00:00', 1, 2);
+INSERT INTO VOTE (DATE, REST_ID, USER_ID)
+VALUES ('2022-01-10', 1, 1),
+       ('2022-01-10', 1, 4),
+       ('2022-01-10', 2, 2),
+       ('2022-01-11', 1, 2);
 
 

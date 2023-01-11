@@ -3,6 +3,7 @@ package ru.javaops.restaurant_voting.web.restaurant;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,14 @@ import ru.javaops.restaurant_voting.util.DishUtil;
 import ru.javaops.restaurant_voting.util.validation.ValidationUtil;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminDishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class DishController {
+public class AdminDishController {
     static final String REST_URL = "/api/admin/restaurants";
     private final DishRepository repository;
     private final DishService service;
@@ -31,7 +33,7 @@ public class DishController {
     public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restId) {
         log.info("create {} in restaurant {}", dish, restId);
         ValidationUtil.checkNew(dish);
-        Dish created = repository.save(dish);
+        Dish created = service.save(dish, restId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/" + restId + "/dishes/{id}").buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -54,15 +56,22 @@ public class DishController {
         repository.delete(id);
     }
 
-    @GetMapping("/{restId}")
+    @GetMapping("/{restId}/dishes")
     public List<DishTo> getAll(@PathVariable int restId) {
         log.info("getAll from restaurant {}", restId);
         return DishUtil.getTos(repository.getAll(restId));
     }
 
-    @GetMapping("/{restId}/{id}")
+    @GetMapping("/{restId}/dishes/{id}")
     public ResponseEntity<Dish> get(@PathVariable int restId, @PathVariable int id) {
         log.info("get dish {} from restaurant {}", id, restId);
         return ResponseEntity.of(repository.get(id, restId));
+    }
+
+    @GetMapping("/{restId}/dishes/by-date")
+    public List<DishTo> getAllByDate(@PathVariable int restId,
+                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("getAllByDate {} from restaurant {}", date, restId);
+        return DishUtil.getTos(repository.getAllByDate(restId, date));
     }
 }

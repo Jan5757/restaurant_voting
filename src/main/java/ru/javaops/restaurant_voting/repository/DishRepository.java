@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.restaurant_voting.error.DataConflictException;
 import ru.javaops.restaurant_voting.model.Dish;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,9 @@ public interface DishRepository extends BaseRepository<Dish> {
 
     @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restId")
     List<Dish> getAll(int restId);
+
+    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restId AND d.date=:date")
+    List<Dish> getAllByDate(int restId, LocalDate date);
 
     @Query("SELECT d FROM Dish d WHERE d.id = :id and d.restaurant.id = :restId")
     Optional<Dish> get(int id, int restId);

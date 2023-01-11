@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.restaurant_voting.model.Restaurant;
+import ru.javaops.restaurant_voting.model.Vote;
 import ru.javaops.restaurant_voting.repository.RestaurantRepository;
+import ru.javaops.restaurant_voting.service.RestaurantService;
 import ru.javaops.restaurant_voting.util.validation.ValidationUtil;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class RestaurantController {
+public class AdminRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
     private final RestaurantRepository repository;
+    private final RestaurantService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
@@ -51,31 +56,22 @@ public class RestaurantController {
         repository.deleteExisted(id);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Restaurant> get(@PathVariable int id) {
+        log.info("get restaurant {}", id);
+        return ResponseEntity.of(repository.findById(id));
+    }
+
     @GetMapping
     public List<Restaurant> getAll() {
         log.info("getAll");
-        return repository.findAll(Sort.by(Sort.Direction.DESC, "name"));
-    }
-
-    @GetMapping("/{id}/with-dishes")
-    public ResponseEntity<Restaurant> getWithDishes(@PathVariable int id) {
-        log.info("getWithDishes {}", id);
-        return ResponseEntity.of(repository.getWithDishes(id));
-    }
-
-    @GetMapping("/with-dishes")
-    public List<Restaurant> getAllWithDishes() {
-        return repository.getAllWithDishes();
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     @GetMapping("/enabled")
     public List<Restaurant> getAllEnabled() {
+        log.info("getAllEnabled");
         return repository.getAllEnabled();
-    }
-
-    @GetMapping("/enabled/with-dishes")
-    public List<Restaurant> getAllEnabledWithDishes() {
-        return repository.getAllEnabledWithDishes();
     }
 
     @PatchMapping("/{id}")
@@ -85,5 +81,17 @@ public class RestaurantController {
         log.info(enabled ? "enable {}" : "disable {}", id);
         Restaurant repositoryExisted = repository.getExisted(id);
         repositoryExisted.setEnabled(enabled);
+    }
+
+    @GetMapping("/votes")
+    public List<Vote> getAllVotesByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("getAllVotesByDate");
+        return service.getAllVotesByDate(date);
+    }
+
+    @GetMapping("/votes/winner")
+    public ResponseEntity<Restaurant> getWinner(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("getWinner Restaurant");
+        return ResponseEntity.of(service.getWinner(date));
     }
 }
