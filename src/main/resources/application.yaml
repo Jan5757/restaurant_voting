@@ -27,12 +27,14 @@ spring:
     setter: none
     is-getter: none
 
-#cache
+  cache:
+    cache-names: users, restaurants, restaurantsEnabled
+    caffeine.spec: maximumSize=5000, expireAfterAccess=60s
 
 logging:
   level:
     root: WARN
-    ru.javaops.topjava: DEBUG
+    ru.javaops.restaurant_voting: DEBUG
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server.servlet:

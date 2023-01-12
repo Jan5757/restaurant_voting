@@ -35,4 +35,8 @@ public class RestaurantService {
         List<Restaurant> restaurants = voteRepository.getWinnerByDate(date);
         return Optional.ofNullable(restaurants.isEmpty() ? null : restaurants.get(0));
     }
+
+    public List<Restaurant> getAllEnabled() {
+        return restaurantRepository.getAllEnabled();
+    }
 }
