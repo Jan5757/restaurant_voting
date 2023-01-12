@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.javaops.restaurant_voting.util.validation.NoHtml;
 
 @MappedSuperclass
 @Getter
@@ -17,7 +18,7 @@ public abstract class NamedEntity extends BaseEntity {
     @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 2, max = 128)
-    //TODO nohtml
+    @NoHtml
     protected String name;
 
     protected NamedEntity(Integer id, String name) {

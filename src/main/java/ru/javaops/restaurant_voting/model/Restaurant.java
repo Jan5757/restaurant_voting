@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.javaops.restaurant_voting.util.validation.NoHtml;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Restaurant extends NamedEntity implements Serializable {
     @NotBlank
     @Size(max = 256)
     @Column(name = "adress", nullable = false)
+    @NoHtml
     private String adress;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
@@ -33,5 +35,4 @@ public class Restaurant extends NamedEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(hidden = true)
     private List<Dish> dishes;
-
 }

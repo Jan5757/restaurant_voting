@@ -1,6 +1,7 @@
 package ru.javaops.restaurant_voting.util;
 
 import lombok.experimental.UtilityClass;
+import ru.javaops.restaurant_voting.config.SecurityConfiguration;
 import ru.javaops.restaurant_voting.model.Role;
 import ru.javaops.restaurant_voting.model.User;
 import ru.javaops.restaurant_voting.to.UserTo;
@@ -16,6 +17,12 @@ public class UsersUtil {
         user.setName(userTo.getName());
         user.setEmail(userTo.getEmail().toLowerCase());
         user.setPassword(userTo.getPassword());
+        return user;
+    }
+
+    public static User prepareToSave(User user) {
+        user.setPassword(SecurityConfiguration.PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setEmail(user.getEmail().toLowerCase());
         return user;
     }
 }

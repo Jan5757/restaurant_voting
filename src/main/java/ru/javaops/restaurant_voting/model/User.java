@@ -13,6 +13,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
+import ru.javaops.restaurant_voting.util.validation.NoHtml;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -31,7 +32,7 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @Email
     @NotBlank
     @Size(max = 128)
-    //todo  nohtml
+    @NoHtml
     private String email;
 
     @Column(name = "password", nullable = false)

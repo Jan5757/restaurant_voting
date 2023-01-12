@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
+import ru.javaops.restaurant_voting.util.validation.NoHtml;
 
 import java.time.LocalDate;
 
@@ -27,6 +28,7 @@ public class Dish extends NamedEntity {
 
     @NotNull
     @Column(name = "currency_code_iso")
+    @NoHtml
     private String currencyCode;
 
     @Column(name = "date", nullable = false)

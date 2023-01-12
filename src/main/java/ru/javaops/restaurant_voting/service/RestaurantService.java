@@ -2,6 +2,7 @@ package ru.javaops.restaurant_voting.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.javaops.restaurant_voting.model.BaseEntity;
 import ru.javaops.restaurant_voting.model.Restaurant;
 import ru.javaops.restaurant_voting.model.Vote;
 import ru.javaops.restaurant_voting.repository.RestaurantRepository;
@@ -24,6 +25,7 @@ public class RestaurantService {
 
     public void doVote(AuthUser authUser, LocalDate date, int restId) {
         Vote vote = new Vote(authUser.getUser(), date, restaurantRepository.getExisted(restId));
+        prepareAndSaveVote(vote);
         voteRepository.save(vote);
     }
 
@@ -38,5 +40,11 @@ public class RestaurantService {
 
     public List<Restaurant> getAllEnabled() {
         return restaurantRepository.getAllEnabled();
+    }
+
+    public void prepareAndSaveVote(Vote vote) {
+        Optional<Vote> currentVote = voteRepository.getVoteByDateAndUser(vote.getDate(), vote.getUser());
+        vote.setId(currentVote.map(BaseEntity::getId).orElse(null));
+        voteRepository.save(vote);
     }
 }

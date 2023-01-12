@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import ru.javaops.restaurant_voting.model.HasIdAndEmail;
+import ru.javaops.restaurant_voting.util.validation.NoHtml;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -13,7 +14,7 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
     @Email
     @NotBlank
     @Size(max = 128)
-    //todo nohtml
+    @NoHtml
     String email;
 
     @NotBlank

@@ -41,7 +41,7 @@ public class ProfileController extends AbstractUserController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "users",allEntries = true)
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         super.delete(authUser.id());
     }
@@ -54,11 +54,10 @@ public class ProfileController extends AbstractUserController {
         log.info("update {} with id={}", userTo, authUser.id());
         ValidationUtil.assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();
-        repository.save(UsersUtil.updateFromTo(user, userTo)); //todo prepareAndSave();
+        prepareAndSave(UsersUtil.updateFromTo(user, userTo));
     }
 
-    //todo check test
-    @PostMapping(value = "/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void voting(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restId) {
         log.info("voting user {} for restaurant {}", authUser, restId);
@@ -78,7 +77,7 @@ public class ProfileController extends AbstractUserController {
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register {}", userTo);
         ValidationUtil.checkNew(userTo);
-        User created = repository.save(UsersUtil.createNewFromTo(userTo)); //todo prepareAndSave
+        User created = prepareAndSave(UsersUtil.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath().path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
