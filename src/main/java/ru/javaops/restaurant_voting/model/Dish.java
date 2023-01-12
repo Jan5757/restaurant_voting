@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
+import ru.javaops.restaurant_voting.util.validation.CurrencyCode;
 import ru.javaops.restaurant_voting.util.validation.NoHtml;
 
 import java.time.LocalDate;
@@ -24,11 +25,12 @@ public class Dish extends NamedEntity {
     @NotNull
     @Range(min = 0, max = 999999999)
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Long price;
 
     @NotNull
     @Column(name = "currency_code_iso")
     @NoHtml
+    @CurrencyCode
     private String currencyCode;
 
     @Column(name = "date", nullable = false)
@@ -41,7 +43,7 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, Integer price) {
+    public Dish(Integer id, String name, Long price) {
         super(id, name);
         this.price = price;
     }

@@ -20,11 +20,6 @@ public class Money {
         this.amount = amount * centFactor();
     }
 
-    public Money(double amount, Currency currency) {
-        this.currency = currency;
-        this.amount = Math.round(amount * centFactor());
-    }
-
     private Money() {
     }
 
