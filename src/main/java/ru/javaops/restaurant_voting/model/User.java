@@ -59,16 +59,10 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
-    @Column(name = "vote", nullable = false, columnDefinition = "bool default false")
-    private boolean isVoted = false;
+    public User(User u) {
+        this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
+    }
 
-    @Column(name = "rest_id")
-    private Integer restaurantId;
-
-//    public User(User u) {
-//        this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.restaurantId, u.isVoted, u.roles);
-//    }
-//
     public User(Integer id, String name, String email, String password, Role... roles) {
         this(id, name, email, password, true, new Date(), Arrays.asList(roles));
     }

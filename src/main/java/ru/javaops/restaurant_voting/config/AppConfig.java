@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ProblemDetail;
+import ru.javaops.restaurant_voting.util.JsonUtil;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -42,6 +43,6 @@ public class AppConfig {
     void configureAndStoreObjectMapper(ObjectMapper objectMapper) {
         objectMapper.registerModule(new Hibernate5JakartaModule());
         objectMapper.addMixIn(ProblemDetail.class, MixIn.class);
-        //todo
+        JsonUtil.setMapper(objectMapper);
     }
 }
