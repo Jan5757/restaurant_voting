@@ -14,7 +14,7 @@ If it is before 11:00 we assume that he changed his mind.
 If it is after 11:00 then it is too late, vote can't be changed
 Each restaurant provides a new menu each day.
 
-Swagger link: /swagger-ui/index.html
+Swagger link: http://localhost:8080/swagger-ui/index.html
 
 Test credentials:
 - user@yandex.ru / password
