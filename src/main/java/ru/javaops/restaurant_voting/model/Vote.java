@@ -35,7 +35,8 @@ public class Vote extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
-    public Vote(User user, LocalDate date, Restaurant restaurant) {
+    public Vote(Integer id, User user, LocalDate date, Restaurant restaurant) {
+        super(id);
         this.user = user;
         this.date = date;
         this.restaurant = restaurant;

@@ -16,11 +16,15 @@ import ru.javaops.restaurant_voting.util.validation.NoHtml;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "rest_id"}, name = "dish_unique_name_rest_idx")})
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "rest_id", "date"}, name = "dish_unique_name_rest_date_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dish extends NamedEntity {
+
+    @Column(name = "date", nullable = false)
+    @NotNull
+    private LocalDate date;
 
     @NotNull
     @Range(min = 0, max = 999999999)
@@ -33,9 +37,6 @@ public class Dish extends NamedEntity {
     @CurrencyCode
     private String currencyCode;
 
-    @Column(name = "date", nullable = false)
-    @NotNull
-    private LocalDate date;
 
     @JsonIgnore
     @JoinColumn(name = "rest_id", nullable = false)
@@ -43,8 +44,14 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, Long price) {
+    public Dish(Integer id, String name, LocalDate date, Long price, String currencyCode) {
         super(id, name);
+        this.date = date;
         this.price = price;
+        this.currencyCode = currencyCode;
+    }
+
+    public Dish(Dish d) {
+        this(d.id, d.name, d.date, d.price, d.currencyCode);
     }
 }

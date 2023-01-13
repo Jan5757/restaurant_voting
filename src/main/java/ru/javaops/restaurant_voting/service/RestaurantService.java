@@ -24,7 +24,7 @@ public class RestaurantService {
     }
 
     public void doVote(AuthUser authUser, LocalDate date, int restId) {
-        Vote vote = new Vote(authUser.getUser(), date, restaurantRepository.getExisted(restId));
+        Vote vote = new Vote(null, authUser.getUser(), date, restaurantRepository.getExisted(restId));
         prepareAndSaveVote(vote);
         voteRepository.save(vote);
     }

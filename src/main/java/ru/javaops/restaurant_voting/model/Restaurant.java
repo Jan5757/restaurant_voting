@@ -35,4 +35,14 @@ public class Restaurant extends NamedEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(hidden = true)
     private List<Dish> dishes;
+
+    public Restaurant(Integer id, String name, String adress, boolean enabled) {
+        super(id, name);
+        this.adress = adress;
+        this.enabled = enabled;
+    }
+
+    public Restaurant(Restaurant r) {
+        this(r.id, r.name, r.adress, r.enabled);
+    }
 }

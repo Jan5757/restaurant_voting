@@ -1,12 +1,14 @@
 INSERT INTO USERS (NAME, EMAIL, PASSWORD)
 VALUES ('User', 'user@yandex.ru', '{noop}password'),
        ('Admin', 'admin@gmail.com', '{noop}admin'),
-       ('Guest', 'guest@gmail.com', '{noop}guest');
+       ('Guest', 'guest@gmail.com', '{noop}guest'),
+       ('User2', 'user2@yandex.ru', '{noop}password');
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
        ('ADMIN', 2),
-       ('USER', 2);
+       ('USER', 2),
+       ('USER', 4);
 
 INSERT INTO RESTAURANT (NAME, ADRESS, ENABLED)
 VALUES ('Claude Monet', '25/20 building 1 Spiridonovka street 25/20b1, Moscow', TRUE),
@@ -30,6 +32,7 @@ VALUES ('2022-01-10', 'Bouillabaisse', 55000, 1, 'RUB'),
 INSERT INTO VOTE (DATE, REST_ID, USER_ID)
 VALUES ('2022-01-10', 1, 1),
        ('2022-01-10', 2, 2),
+       ('2022-01-10', 1, 4),
        ('2022-01-11', 1, 2);
 
 
