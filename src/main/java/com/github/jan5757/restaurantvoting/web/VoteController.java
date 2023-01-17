@@ -4,6 +4,7 @@ import com.github.jan5757.restaurantvoting.error.IllegalRequestDataException;
 import com.github.jan5757.restaurantvoting.model.Vote;
 import com.github.jan5757.restaurantvoting.repository.RestaurantRepository;
 import com.github.jan5757.restaurantvoting.repository.VoteRepository;
+import com.github.jan5757.restaurantvoting.util.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -28,20 +28,17 @@ public class VoteController {
     static final String REST_URL = "/api/votes";
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
-    private final Clock clock;
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restId) {
         log.info("voting user {} for restaurant {}", authUser, restId);
-        LocalDateTime votingDateTime = LocalDateTime.now(clock);
+        LocalDateTime votingDateTime = LocalDateTime.now(TimeUtil.getClock());
         if (voteRepository.getVoteByDateAndUser(votingDateTime.toLocalDate(), authUser.getUser()).isPresent()) {
             throw new IllegalRequestDataException("User has already voted today. Please try update exist vote");
         }
         Vote vote = new Vote(null, authUser.getUser(), votingDateTime.toLocalDate(), restaurantRepository.getExisted(restId));
-//        Vote vote = new Vote(null, authUser.getUser(), votingDateTime.toLocalDate(),
-//                em.getReference(Restaurant.class, restId));
         Vote created = voteRepository.save(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -55,7 +52,7 @@ public class VoteController {
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestParam int restId, @PathVariable int id) {
         log.info("update vote for user {}", authUser);
-        LocalDateTime votingDateTime = LocalDateTime.now(clock);
+        LocalDateTime votingDateTime = LocalDateTime.now(TimeUtil.getClock());
         if (voteRepository.getVoteByDateAndUser(votingDateTime.toLocalDate(), authUser.getUser()).isEmpty()
                 || votingDateTime.toLocalTime().isAfter(TIME_VOTING_END)) {
             throw new IllegalRequestDataException("Time to vote is over. Please vote until " + TIME_VOTING_END
