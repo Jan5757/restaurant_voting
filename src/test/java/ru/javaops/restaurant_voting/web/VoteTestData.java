@@ -1,14 +1,20 @@
-package ru.javaops.restaurant_voting.web.restaurant;
+package ru.javaops.restaurant_voting.web;
 
 import ru.javaops.restaurant_voting.model.Vote;
-import ru.javaops.restaurant_voting.web.MatcherFactory;
-import ru.javaops.restaurant_voting.web.user.UserTestData;
 
 import java.time.LocalDate;
 import java.time.Month;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class VoteTestData {
-    public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant");
+    public static MatcherFactory.Matcher<Vote> VOTE_MATCHER =
+            MatcherFactory.usingAssertions(Vote.class,
+                    (a, e) -> assertThat(a).usingRecursiveComparison()
+                            .ignoringFields("user.password", "user.registered", "restaurant.dishes").isEqualTo(e),
+                    (a, e) -> {
+                        throw new UnsupportedOperationException();
+                    });
     public static final int VOTE1_ID = 1;
 
     public static final Vote vote1 = new Vote(VOTE1_ID, UserTestData.user, LocalDate.of(2022, Month.JANUARY, 10), RestaurantTestData.rest1);

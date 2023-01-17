@@ -12,10 +12,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
 
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restId ORDER BY d.id")
+    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restId ORDER BY d.name")
     List<Dish> getAll(int restId);
 
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restId AND d.date=:date ORDER BY d.id")
+    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restId AND d.date=:date ORDER BY d.name")
     List<Dish> getAllByDate(int restId, LocalDate date);
 
     @Query("SELECT d FROM Dish d WHERE d.id = :id and d.restaurant.id = :restId")

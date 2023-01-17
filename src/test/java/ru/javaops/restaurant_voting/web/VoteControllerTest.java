@@ -9,10 +9,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaops.restaurant_voting.model.Vote;
 import ru.javaops.restaurant_voting.repository.VoteRepository;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.javaops.restaurant_voting.web.UserTestData.USER_MAIL;
+import static ru.javaops.restaurant_voting.web.UserTestData.user;
 import static ru.javaops.restaurant_voting.web.VoteController.REST_URL;
-import static ru.javaops.restaurant_voting.web.restaurant.VoteTestData.VOTE_MATCHER;
-import static ru.javaops.restaurant_voting.web.user.UserTestData.USER_MAIL;
+import static ru.javaops.restaurant_voting.web.VoteTestData.VOTE_MATCHER;
 
 public class VoteControllerTest extends AbstractControllerTest {
 //    private static final String REST_URL_SLASH = REST_URL + '/';
@@ -42,9 +45,10 @@ public class VoteControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("restId", "1"))
                 .andExpect(status().isCreated());
-
+        Vote expected = new Vote(null, user, LocalDate.now(), RestaurantTestData.rest1);
         Vote created = VOTE_MATCHER.readFromJson(action);
         int newId = created.id();
-        VOTE_MATCHER.assertMatch(voteRepository.getExisted(newId), created);
+        expected.setId(newId);
+        VOTE_MATCHER.assertMatch(voteRepository.getExisted(newId), expected);
     }
 }

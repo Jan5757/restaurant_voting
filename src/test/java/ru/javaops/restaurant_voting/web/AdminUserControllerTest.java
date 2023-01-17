@@ -1,4 +1,4 @@
-package ru.javaops.restaurant_voting.web.user;
+package ru.javaops.restaurant_voting.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.restaurant_voting.model.Role;
 import ru.javaops.restaurant_voting.model.User;
 import ru.javaops.restaurant_voting.repository.UserRepository;
-import ru.javaops.restaurant_voting.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaops.restaurant_voting.web.user.AdminUserController.REST_URL;
-import static ru.javaops.restaurant_voting.web.user.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
-import static ru.javaops.restaurant_voting.web.user.UserTestData.*;
+import static ru.javaops.restaurant_voting.web.AdminUserController.REST_URL;
+import static ru.javaops.restaurant_voting.web.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
+import static ru.javaops.restaurant_voting.web.UserTestData.*;
 
 public class AdminUserControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';

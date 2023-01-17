@@ -2,7 +2,6 @@ package ru.javaops.restaurant_voting.to;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import ru.javaops.restaurant_voting.model.Money;
 import ru.javaops.restaurant_voting.model.NamedEntity;
 
 import java.time.LocalDate;
@@ -11,10 +10,10 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class DishTo extends NamedEntity {
 
-    Money price;
+    Long price;
     LocalDate date;
 
-    public DishTo(Integer id, String name, Money price, LocalDate date) {
+    public DishTo(Integer id, String name, Long price, LocalDate date) {
         super(id, name);
         this.price = price;
         this.date = date;

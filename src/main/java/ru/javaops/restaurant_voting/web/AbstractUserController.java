@@ -1,4 +1,4 @@
-package ru.javaops.restaurant_voting.web.user;
+package ru.javaops.restaurant_voting.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,16 +1,16 @@
-package ru.javaops.restaurant_voting.web.restaurant;
+package ru.javaops.restaurant_voting.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.restaurant_voting.model.Restaurant;
@@ -30,10 +30,7 @@ public class RestaurantController {
     private final RestaurantRepository repository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Caching(evict = {
-            @CacheEvict(value = "restaurants", allEntries = true),
-            @CacheEvict(value = "restaurantsEnabled", allEntries = true)
-    })
+    @CacheEvict(value = "restaurants", allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         ValidationUtil.checkNew(restaurant);
@@ -45,10 +42,8 @@ public class RestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Caching(evict = {
-            @CacheEvict(value = "restaurants", allEntries = true),
-            @CacheEvict(value = "restaurantsEnabled", allEntries = true)
-    })
+    @CacheEvict(value = "restaurants", allEntries = true)
+    @Transactional
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {}", restaurant);
         ValidationUtil.assureIdConsistent(restaurant, id);
@@ -58,11 +53,7 @@ public class RestaurantController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict("restaurants")
-    @Caching(evict = {
-            @CacheEvict(value = "restaurants", allEntries = true),
-            @CacheEvict(value = "restaurantsEnabled", allEntries = true)
-    })
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void delete(@PathVariable int id) {
         log.info("delete restaurant {}", id);
         repository.deleteExisted(id);
@@ -81,15 +72,13 @@ public class RestaurantController {
     }
 
     @GetMapping
-    @Cacheable("restaurants")
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
-    /// todo закешировать рестораны с едой
     @GetMapping(value = "/with-dishes")
-    //@Cacheable("restaurants")
+    @Cacheable("restaurants")
     public List<Restaurant> getAllWithDishesByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("getAllWithDishesByDate");
         return repository.getAllWithDishesByDate(date);

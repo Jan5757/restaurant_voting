@@ -13,7 +13,6 @@ import ru.javaops.restaurant_voting.error.IllegalRequestDataException;
 import ru.javaops.restaurant_voting.model.Vote;
 import ru.javaops.restaurant_voting.repository.RestaurantRepository;
 import ru.javaops.restaurant_voting.repository.VoteRepository;
-import ru.javaops.restaurant_voting.util.DishUtil;
 
 import java.net.URI;
 import java.time.Clock;
@@ -25,6 +24,7 @@ import java.time.LocalTime;
 @Slf4j
 @AllArgsConstructor
 public class VoteController {
+    public static final LocalTime TIME_VOTING_END = LocalTime.of(11, 0);
     static final String REST_URL = "/api/votes";
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
@@ -40,6 +40,8 @@ public class VoteController {
             throw new IllegalRequestDataException("User has already voted today. Please try update exist vote");
         }
         Vote vote = new Vote(null, authUser.getUser(), votingDateTime.toLocalDate(), restaurantRepository.getExisted(restId));
+//        Vote vote = new Vote(null, authUser.getUser(), votingDateTime.toLocalDate(),
+//                em.getReference(Restaurant.class, restId));
         Vote created = voteRepository.save(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -55,8 +57,8 @@ public class VoteController {
         log.info("update vote for user {}", authUser);
         LocalDateTime votingDateTime = LocalDateTime.now(clock);
         if (voteRepository.getVoteByDateAndUser(votingDateTime.toLocalDate(), authUser.getUser()).isEmpty()
-                || votingDateTime.toLocalTime().isAfter(LocalTime.parse(DishUtil.TIME_VOTING_END))) {
-            throw new IllegalRequestDataException("Time to vote is over. Please vote until " + DishUtil.TIME_VOTING_END
+                || votingDateTime.toLocalTime().isAfter(TIME_VOTING_END)) {
+            throw new IllegalRequestDataException("Time to vote is over. Please vote until " + TIME_VOTING_END
                     + " or vote not exist");
         }
         Vote vote = new Vote(id, authUser.getUser(), votingDateTime.toLocalDate(), restaurantRepository.getExisted(restId));

@@ -1,4 +1,4 @@
-package ru.javaops.restaurant_voting.web.user;
+package ru.javaops.restaurant_voting.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +11,14 @@ import ru.javaops.restaurant_voting.repository.UserRepository;
 import ru.javaops.restaurant_voting.to.UserTo;
 import ru.javaops.restaurant_voting.util.JsonUtil;
 import ru.javaops.restaurant_voting.util.UsersUtil;
-import ru.javaops.restaurant_voting.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaops.restaurant_voting.web.user.ProfileController.REST_URL;
-import static ru.javaops.restaurant_voting.web.user.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
-import static ru.javaops.restaurant_voting.web.user.UserTestData.*;
+import static ru.javaops.restaurant_voting.web.ProfileController.REST_URL;
+import static ru.javaops.restaurant_voting.web.UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL;
+import static ru.javaops.restaurant_voting.web.UserTestData.*;
 
 public class ProfileControllerTest extends AbstractControllerTest {
     @Autowired

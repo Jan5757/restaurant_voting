@@ -1,4 +1,4 @@
-package ru.javaops.restaurant_voting.web.user;
+package ru.javaops.restaurant_voting.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,6 @@ import ru.javaops.restaurant_voting.model.User;
 import ru.javaops.restaurant_voting.to.UserTo;
 import ru.javaops.restaurant_voting.util.UsersUtil;
 import ru.javaops.restaurant_voting.util.validation.ValidationUtil;
-import ru.javaops.restaurant_voting.web.AuthUser;
 
 import java.net.URI;
 

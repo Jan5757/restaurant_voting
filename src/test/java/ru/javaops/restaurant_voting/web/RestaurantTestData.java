@@ -1,7 +1,6 @@
-package ru.javaops.restaurant_voting.web.restaurant;
+package ru.javaops.restaurant_voting.web;
 
 import ru.javaops.restaurant_voting.model.Restaurant;
-import ru.javaops.restaurant_voting.web.MatcherFactory;
 
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "dishes");

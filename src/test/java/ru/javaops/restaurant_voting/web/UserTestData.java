@@ -1,9 +1,8 @@
-package ru.javaops.restaurant_voting.web.user;
+package ru.javaops.restaurant_voting.web;
 
 import ru.javaops.restaurant_voting.model.Role;
 import ru.javaops.restaurant_voting.model.User;
 import ru.javaops.restaurant_voting.util.JsonUtil;
-import ru.javaops.restaurant_voting.web.MatcherFactory;
 
 import java.util.Collections;
 import java.util.Date;
