@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaops.restaurant_voting.web.restaurant.AdminRestaurantController.REST_URL;
+import static ru.javaops.restaurant_voting.web.restaurant.RestaurantController.REST_URL;
 import static ru.javaops.restaurant_voting.web.restaurant.RestaurantTestData.*;
 import static ru.javaops.restaurant_voting.web.user.UserTestData.ADMIN_MAIL;
 import static ru.javaops.restaurant_voting.web.user.UserTestData.USER_MAIL;
 
-public class AdminRestaurantControllerTest extends AbstractControllerTest {
+public class RestaurantControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
@@ -62,16 +62,6 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void enableNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + NOT_FOUND)
-                .param("enabled", "false")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
     void getUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isUnauthorized());
@@ -79,8 +69,8 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void getForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+    void delForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + REST1_ID))
                 .andExpect(status().isForbidden());
     }
 
@@ -125,20 +115,8 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void enable() throws Exception {
-        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + REST1_ID)
-                .param("enabled", "false")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-
-        assertFalse(restaurantRepository.getExisted(REST1_ID).isEnabled());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Restaurant invalid = new Restaurant(null, null, "", true);
+        Restaurant invalid = new Restaurant(null, null, "");
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -168,27 +146,5 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void getAllVotesByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "votes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("date", "2022-01-10"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(VoteTestData.VOTE_MATCHER.contentJson(VoteTestData.vote1, VoteTestData.vote2, VoteTestData.vote3));
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void geWinner() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "votes/winner")
-                .param("date", "2022-01-10"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(rest1));
     }
 }

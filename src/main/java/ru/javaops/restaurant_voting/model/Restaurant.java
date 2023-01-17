@@ -28,21 +28,17 @@ public class Restaurant extends NamedEntity implements Serializable {
     @NoHtml
     private String adress;
 
-    @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
-    private boolean enabled = true;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(hidden = true)
     private List<Dish> dishes;
 
-    public Restaurant(Integer id, String name, String adress, boolean enabled) {
+    public Restaurant(Integer id, String name, String adress) {
         super(id, name);
         this.adress = adress;
-        this.enabled = enabled;
     }
 
     public Restaurant(Restaurant r) {
-        this(r.id, r.name, r.adress, r.enabled);
+        this(r.id, r.name, r.adress);
     }
 }

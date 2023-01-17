@@ -10,10 +10,10 @@ VALUES ('USER', 1),
        ('USER', 2),
        ('USER', 4);
 
-INSERT INTO RESTAURANT (NAME, ADRESS, ENABLED)
-VALUES ('Claude Monet', '25/20 building 1 Spiridonovka street 25/20b1, Moscow', TRUE),
-       ('Primavera', '17 Shabolovka Street, Moscow', TRUE),
-       ('Praga', '2/1 Arbat St, Moscow', TRUE);
+INSERT INTO RESTAURANT (NAME, ADRESS)
+VALUES ('Claude Monet', '25/20 building 1 Spiridonovka street 25/20b1, Moscow'),
+       ('Primavera', '17 Shabolovka Street, Moscow'),
+       ('Praga', '2/1 Arbat St, Moscow');
 
 INSERT INTO DISH (DATE, NAME, PRICE, REST_ID, CURRENCY_CODE_ISO)
 VALUES ('2022-01-10', 'Bouillabaisse', 55000, 1, 'RUB'),

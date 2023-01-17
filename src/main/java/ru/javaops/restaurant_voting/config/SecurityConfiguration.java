@@ -52,12 +52,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/api/profile").anonymous()
-                .requestMatchers("/api/profile/**").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/profile").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/api/profile").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/api/profile").authenticated()
+                .requestMatchers("/api/profile").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .requestMatchers("/api/votes/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .requestMatchers(HttpMethod.GET, "/api/restaurants/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .requestMatchers("/api/**").hasRole(Role.ADMIN.name())
+                .anyRequest().denyAll()
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

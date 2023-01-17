@@ -11,13 +11,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaops.restaurant_voting.model.Restaurant;
-import ru.javaops.restaurant_voting.model.Vote;
 import ru.javaops.restaurant_voting.repository.RestaurantRepository;
-import ru.javaops.restaurant_voting.service.RestaurantService;
 import ru.javaops.restaurant_voting.util.validation.ValidationUtil;
 
 import java.net.URI;
@@ -25,13 +22,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class AdminRestaurantController {
-    static final String REST_URL = "/api/admin/restaurants";
+public class RestaurantController {
+    static final String REST_URL = "/api/restaurants";
     private final RestaurantRepository repository;
-    private final RestaurantService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Caching(evict = {
@@ -78,6 +74,12 @@ public class AdminRestaurantController {
         return ResponseEntity.of(repository.findById(id));
     }
 
+    @GetMapping("/{id}/with-dishes")
+    public ResponseEntity<Restaurant> getWithDishes(@PathVariable int id, LocalDate date) {
+        log.info("getWithDishes restaurant {} by date {}", id, date);
+        return ResponseEntity.of(repository.getWithDishes(id, date));
+    }
+
     @GetMapping
     @Cacheable("restaurants")
     public List<Restaurant> getAll() {
@@ -85,25 +87,11 @@ public class AdminRestaurantController {
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
-    @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    @CacheEvict(value = "restaurantsEnabled", allEntries = true)
-    public void enable(@PathVariable int id, @RequestParam boolean enabled) {
-        log.info(enabled ? "enable {}" : "disable {}", id);
-        Restaurant repositoryExisted = repository.getExisted(id);
-        repositoryExisted.setEnabled(enabled);
-    }
-
-    @GetMapping("/votes")
-    public List<Vote> getAllVotesByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("getAllVotesByDate");
-        return service.getAllVotesByDate(date);
-    }
-
-    @GetMapping("/votes/winner")
-    public ResponseEntity<Restaurant> getWinner(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("getWinner Restaurant");
-        return ResponseEntity.of(service.getWinner(date));
+    /// todo закешировать рестораны с едой
+    @GetMapping(value = "/with-dishes")
+    //@Cacheable("restaurants")
+    public List<Restaurant> getAllWithDishesByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("getAllWithDishesByDate");
+        return repository.getAllWithDishesByDate(date);
     }
 }

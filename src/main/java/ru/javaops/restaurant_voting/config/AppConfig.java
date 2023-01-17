@@ -15,6 +15,7 @@ import org.springframework.http.ProblemDetail;
 import ru.javaops.restaurant_voting.util.JsonUtil;
 
 import java.sql.SQLException;
+import java.time.Clock;
 import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
@@ -44,5 +45,10 @@ public class AppConfig {
         objectMapper.registerModule(new Hibernate5JakartaModule());
         objectMapper.addMixIn(ProblemDetail.class, MixIn.class);
         JsonUtil.setMapper(objectMapper);
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
     }
 }
