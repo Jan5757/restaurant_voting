@@ -1,5 +1,6 @@
 package com.github.jan5757.restaurantvoting.to;
 
+import com.github.jan5757.restaurantvoting.util.validation.NoHtml;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
 public class NamedTo extends BaseTo{
     @NotBlank
     @Size(min = 2, max = 128)
-    //todo nohtml
+    @NoHtml
     protected String name;
 
     public NamedTo(Integer id, String name) {
